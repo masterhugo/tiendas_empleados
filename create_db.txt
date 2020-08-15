@@ -1,0 +1,92 @@
+USE [test]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Tienda_Empleado]') AND type in (N'U'))
+DROP TABLE [dbo].[Tienda_Empleado]
+GO
+
+
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Empleado]') AND type in (N'U'))
+DROP TABLE [dbo].[Empleado]
+GO
+
+CREATE TABLE [dbo].[Empleado](
+	[id] [numeric](18, 0) not NULL,
+	[nombre] [nvarchar](max) not NULL,
+	[documento] [nvarchar](max) not NULL,
+	[fecha_nacimiento] [datetime] NULL,
+	[genero] [nvarchar](max) null,
+	[cargo] [numeric](18, 0) NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Cargo1]    Script Date: 14/08/2020 5:07:58 p. m. ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Cargo]') AND type in (N'U'))
+DROP TABLE [dbo].[Cargo]
+GO
+
+/****** Object:  Table [dbo].[Cargo1]    Script Date: 14/08/2020 5:07:58 p. m. ******/
+
+
+CREATE TABLE [dbo].[Cargo](
+	[id] [numeric](18, 0) not NULL,
+	[nombre] [nvarchar](max) NULL,
+	[descripcion] [nvarchar](max) NULL,
+	[salario] [numeric](18, 0) not NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Tienda]') AND type in (N'U'))
+DROP TABLE [dbo].[Tienda]
+GO
+
+
+
+CREATE TABLE [dbo].[Tienda](
+	[id] [numeric](18, 0) not NULL,
+	[nombre] [nvarchar](max) NULL,
+	[direccion] [nvarchar](max) NULL,
+	[telefono] [nvarchar](max) NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+
+
+CREATE TABLE [dbo].[Tienda_Empleado](
+	[id_tienda] [numeric](18, 0) not NULL,
+	[id_empleado] [numeric](18, 0) not NULL,
+	[dia_trabajado] [datetime] not NULL
+) 
+GO
+
+
+Alter Table Cargo
+add primary key(id);
+
+ALTER TABLE Empleado
+add constraint FK_EmpleadoCargo
+FOREIGN KEY (cargo) REFERENCES Cargo(id); 
+
+Alter Table Empleado
+add primary key(id);
+
+Alter Table Tienda
+add primary key(id);
+
+ALTER TABLE Tienda_Empleado
+add constraint FK_TiendaEmpleado
+FOREIGN KEY (id_tienda) REFERENCES Tienda(id); 
+
+ALTER TABLE Tienda_Empleado
+add constraint FK_EmpleadoTienda
+FOREIGN KEY (id_empleado) REFERENCES Empleado(id); 
+
+Alter Table Tienda_Empleado
+add primary key(id_tienda,id_empleado,dia_trabajado);
+
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
